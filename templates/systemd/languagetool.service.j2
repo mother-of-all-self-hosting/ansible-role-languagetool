@@ -22,7 +22,7 @@ ExecStartPre={{ devture_systemd_docker_base_host_command_docker }} create \
 			--network={{ languagetool_container_network }} \
 			--health-interval={{ languagetool_container_health_interval }} \
 			{% if languagetool_ngrams_enabled %}
-			--mount type=bind,srs={{ languagetool_data_path }},dst=/data,ro \
+			--mount type=bind,src={{ languagetool_data_path }},dst=/data,ro \
 			-e langtool_languageModel=/data \
 			{% endif %}
 			--label-file={{ languagetool_base_path }}/labels \
