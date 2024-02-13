@@ -30,8 +30,9 @@ languagetool_container_network: "{{ languagetool_identifier }}"
 
 # A list of additional container networks that the container would be connected to.
 # The role does not create these networks, so make sure they already exist.
-# Use this to expose this container to another reverse proxy, which runs in a different container network.
-languagetool_container_additional_networks: []
+languagetool_container_additional_networks: "{{ languagetool_container_additional_networks_auto + languagetool_container_additional_networks_custom }}"
+languagetool_container_additional_networks_auto: []
+languagetool_container_additional_networks_custom: []
 
 # languagetool_container_labels_traefik_enabled controls whether labels to assist a Traefik reverse-proxy will be attached to the container.
 # See `../templates/labels.j2` for details.
@@ -157,4 +158,7 @@ languagetool_java_heap_max: 512m
 languagetool_container_extra_arguments: []
 
 # List of systemd services that languagetool.service depends on
-languagetool_systemd_required_services_list: ['docker.service']
+languagetool_systemd_required_services_list: "{{ languagetool_systemd_required_services_list_default + languagetool_systemd_required_services_list_auto + languagetool_systemd_required_services_list_custom }}"
+languagetool_systemd_required_services_list_default: ['docker.service']
+languagetool_systemd_required_services_list_auto: []
+languagetool_systemd_required_services_list_custom: []
