@@ -26,7 +26,8 @@ languagetool_version: 6.5-dockerupdate-1
 languagetool_base_path: "/{{ languagetool_identifier }}"
 languagetool_data_path: "{{ languagetool_base_path }}/data"
 
-languagetool_container_image: "{{ languagetool_container_image_registry_prefix }}erikvl87/languagetool:{{ languagetool_version }}"
+languagetool_container_image: "{{ languagetool_container_image_registry_prefix }}erikvl87/languagetool:{{ languagetool_container_image_tag }}"
+languagetool_container_image_tag: "{{ languagetool_version }}"
 languagetool_container_image_registry_prefix: "{{ languagetool_container_image_registry_prefix_upstream }}"
 languagetool_container_image_registry_prefix_upstream: "{{ languagetool_container_image_registry_prefix_upstream_default }}"
 languagetool_container_image_registry_prefix_upstream_default: docker.io/
