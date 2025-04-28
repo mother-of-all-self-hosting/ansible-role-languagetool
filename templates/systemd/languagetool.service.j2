@@ -30,14 +30,14 @@ ExecStartPre={{ devture_systemd_docker_base_host_command_docker }} create \
 			--user={{ languagetool_uid }}:{{ languagetool_gid }} \
 			--cap-drop=ALL \
 			--network={{ languagetool_container_network }} \
+			-e Java_Xms={{ languagetool_java_heap_min }} \
+			-e Java_Xmx={{ languagetool_java_heap_max }} \
+			-e langtool_languageModel=/data \
+			--label-file={{ languagetool_base_path }}/labels \
 			--health-interval={{ languagetool_container_health_interval }} \
 			{% if languagetool_ngrams_enabled %}
 			--mount type=bind,src={{ languagetool_data_path }},dst=/data,ro \
-			-e langtool_languageModel=/data \
 			{% endif %}
-			--label-file={{ languagetool_base_path }}/labels \
-			-e Java_Xms={{ languagetool_java_heap_min }} \
-			-e Java_Xmx={{ languagetool_java_heap_max }} \
 			{% for arg in languagetool_container_extra_arguments %}
 			{{ arg }} \
 			{% endfor %}
