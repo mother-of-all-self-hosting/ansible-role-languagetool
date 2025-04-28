@@ -1,4 +1,8 @@
+# SPDX-FileCopyrightText: 2023 - 2024 Nikita Chernyi
 # SPDX-FileCopyrightText: 2023 - 2025 Slavi Pantaleev
+# SPDX-FileCopyrightText: 2024 Sergio Durigan Junior
+# SPDX-FileCopyrightText: 2025 MASH project contributors
+# SPDX-FileCopyrightText: 2025 Suguru Hirahara
 #
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
@@ -32,8 +36,16 @@ languagetool_container_image_registry_prefix_upstream: "{{ languagetool_containe
 languagetool_container_image_registry_prefix_upstream_default: docker.io/
 languagetool_container_image_force_pull: "{{ languagetool_container_image.endswith(':latest') }}"
 
+# Controls whether the container exposes its HTTP port (tcp/8010 in the container).
+#
+# Takes an "<ip>:<port>" or "<port>" value (e.g. "127.0.0.1:2586"), or empty string to not expose.
+languagetool_container_http_host_bind_port: ''
+
 # The base container network. It will be auto-created by this role if it doesn't exist already.
 languagetool_container_network: "{{ languagetool_identifier }}"
+
+# The port number in the container
+languagetool_container_http_port: 8010
 
 # A list of additional container networks that the container would be connected to.
 # The role does not create these networks, so make sure they already exist.
