@@ -1,5 +1,7 @@
 {#
 SPDX-FileCopyrightText: 2023 Slavi Pantaleev
+SPDX-FileCopyrightText: 2024 Nikita Chernyi
+SPDX-FileCopyrightText: 2025 Suguru Hirahara
 
 SPDX-License-Identifier: AGPL-3.0-or-later
 #}
@@ -30,6 +32,9 @@ ExecStartPre={{ devture_systemd_docker_base_host_command_docker }} create \
       --user={{ languagetool_uid }}:{{ languagetool_gid }} \
       --cap-drop=ALL \
       --network={{ languagetool_container_network }} \
+      {% if languagetool_container_http_host_bind_port %}
+      -p {{ languagetool_container_http_host_bind_port }}:{{ languagetool_container_http_port }} \
+      {% endif %}
       -e Java_Xms={{ languagetool_java_heap_min }} \
       -e Java_Xmx={{ languagetool_java_heap_max }} \
       -e langtool_languageModel=/data \
