@@ -11,19 +11,19 @@
 
 - when: languagetool_service_stat.stat.exists | bool
   block:
-    - name: Ensure LanguageTool is stopped
+    - name: Ensure LanguageTool systemd service is stopped
       ansible.builtin.service:
         name: "{{ languagetool_identifier }}"
         state: stopped
         enabled: false
         daemon_reload: true
 
-    - name: Ensure LanguageTool systemd service doesn't exist
+    - name: Ensure LanguageTool systemd service does not exist
       ansible.builtin.file:
         path: "{{ devture_systemd_docker_base_systemd_path }}/{{ languagetool_identifier }}.service"
         state: absent
 
-    - name: Ensure LanguageTool path doesn't exist
+    - name: Ensure LanguageTool path does not exist
       ansible.builtin.file:
         path: "{{ languagetool_base_path }}"
         state: absent
