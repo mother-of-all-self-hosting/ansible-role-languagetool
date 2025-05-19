@@ -4,11 +4,14 @@
 
 ---
 
-- block:
-    - when: languagetool_enabled | bool
+- name: Perform LanguageTool installation tasks
+  block:
+    - name: Validate LanguageTool configuration
+      when: languagetool_enabled | bool
       ansible.builtin.include_tasks: "{{ role_path }}/tasks/validate_config.yml"
 
-    - when: languagetool_enabled | bool
+    - name: Install LanguageTool
+      when: languagetool_enabled | bool
       ansible.builtin.include_tasks: "{{ role_path }}/tasks/install.yml"
   tags:
     - setup-all
@@ -16,8 +19,10 @@
     - install-all
     - install-languagetool
 
-- block:
-    - when: not languagetool_enabled | bool
+- name: Perform LanguageTool uninstallation tasks
+  block:
+    - name: Uninstall LanguageTool
+      when: not languagetool_enabled | bool
       ansible.builtin.include_tasks: "{{ role_path }}/tasks/uninstall.yml"
   tags:
     - setup-all
