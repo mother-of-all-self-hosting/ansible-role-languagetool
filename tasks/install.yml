@@ -20,13 +20,15 @@
   with_items: "{{ languagetool_ngrams_langs_enabled }}"
   when: languagetool_ngrams_enabled | bool
 
-- name: Ensure LanguageTool labels installed
+- name: Ensure LanguageTool support files installed
   ansible.builtin.template:
-    src: "{{ role_path }}/templates/labels.j2"
-    dest: "{{ languagetool_base_path }}/labels"
+    src: "{{ role_path }}/templates/{{ item }}.j2"
+    dest: "{{ languagetool_base_path }}/{{ item }}"
     mode: 0640
     owner: "{{ languagetool_uid }}"
     group: "{{ languagetool_gid }}"
+  with_items:
+    - labels
 
 - name: Ensure LanguageTool container image is pulled
   community.docker.docker_image:
