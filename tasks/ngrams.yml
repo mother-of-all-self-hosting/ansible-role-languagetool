@@ -12,14 +12,13 @@
   ansible.builtin.get_url:
     url: "{{ languagetool_ngrams_langs[item] }}"
     dest: "{{ languagetool_ngrams_tmp }}/{{ item }}.zip"
-    mode: 0644
+    mode: "0644"
   when: not ngrams.stat.exists|bool
 
 - name: Ensure unzip installed
   ansible.builtin.package:
     name: unzip
     state: present
-  ignore_errors: true
 
 - name: Unpack n-grams
   ansible.builtin.unarchive:
