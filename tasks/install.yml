@@ -15,7 +15,7 @@
     - "{{ languagetool_base_path }}"
     - "{{ languagetool_data_path }}"
 
-- name: Install n-grams
+- name: Install n-grams data files
   ansible.builtin.include_tasks: ngrams.yml
   with_items: "{{ languagetool_ngrams_langs_enabled }}"
   when: languagetool_ngrams_enabled | bool
