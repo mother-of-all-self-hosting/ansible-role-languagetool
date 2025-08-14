@@ -11,6 +11,7 @@ SPDX-FileCopyrightText: 2022 Warren Bailey
 SPDX-FileCopyrightText: 2023 Antonis Christofides
 SPDX-FileCopyrightText: 2023 Felix Stupp
 SPDX-FileCopyrightText: 2023 Pierre 'McFly' Marty
+SPDX-FileCopyrightText: 2024 Tiz
 SPDX-FileCopyrightText: 2024 - 2025 Suguru Hirahara
 
 SPDX-License-Identifier: AGPL-3.0-or-later
@@ -18,13 +19,11 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 # Setting up LanguageTool
 
-This is an [Ansible](https://www.ansible.com/) role which installs [LanguageTool](https://github.com/httpjamesm/LanguageTool) to run as a [Docker](https://www.docker.com/) container wrapped in a systemd service.
+This is an [Ansible](https://www.ansible.com/) role which installs [LanguageTool](https://languagetool.org) to run as a [Docker](https://www.docker.com/) container wrapped in a systemd service.
 
-LanguageTool allows you to view StackOverflow threads without exposing your IP address, browsing habits, and other browser fingerprinting data to the website.
+LanguageTool is an open source online grammar, style and spell checker.
 
-See the project's [documentation](https://github.com/httpjamesm/LanguageTool/blob/main/README.md) to learn what LanguageTool does and why it might be useful to you.
-
-[<img src="assets/home_dark.webp" title="Home screen in dark mode" width="600" alt="Home screen in dark mode">](assets/home_dark.webp) [<img src="assets/question_dark.webp" title="Question in dark mode" width="600" alt="Question in dark mode">](assets/question_dark.webp) [<img src="assets/answers_light.webp" title="Answer in light mode" width="600" alt="Answer in light mode">](assets/answers_light.webp)
+See the project's [documentation](https://languagetool.org/dev) to learn what LanguageTool does and why it might be useful to you.
 
 ## Adjusting the playbook configuration
 
@@ -58,17 +57,26 @@ languagetool_hostname: "example.com"
 
 After adjusting the hostname, make sure to adjust your DNS records to point the domain to your server.
 
-**Note**: hosting LanguageTool under a subpath (by configuring the `languagetool_path_prefix` variable) does not seem to be possible due to LanguageTool's technical limitations.
+### Enable n-gram data (optional)
 
-### Extending the configuration
+LanguageTool can make use of large n-gram data sets to detect errors with words that are often confused, like "their" and "there". See [*Finding errors using n-gram data*](https://dev.languagetool.org/finding-errors-using-n-gram-data) to learn more.
 
-There are some additional things you may wish to configure about the component.
+>[!NOTE]
+>
+> - The n-gram data set is huge and thus not enabled by default.
+> - [The official documentation](https://web.archive.org/web/20250702050600/https://dev.languagetool.org/finding-errors-using-n-gram-data.html) claims that `ngrams-xx-2024*` files should be used for LanguageTool >= 6.6, but they are not available at <https://languagetool.org/download/ngram-data/>. See [this issue on the GitHub](https://github.com/languagetool-org/languagetool/issues/11422) as well.
 
-Take a look at:
+To make use of it with your own LanguageTool server, you may enable n-gram data and choose which languages' n-gram data to download by adding the following configuration to your `vars.yml` file:
 
-- [`defaults/main.yml`](../defaults/main.yml) for some variables that you can customize via your `vars.yml` file. You can override settings (even those that don't have dedicated playbook variables) using the `languagetool_environment_variables_additional_variables` variable
+```yaml
+languagetool_ngrams_enabled: true
 
-See its [`docker-compose.example.yml`](https://github.com/httpjamesm/LanguageTool/blob/main/docker-compose.example.yml) for a complete list of LanguageTool's config options that you could put in `languagetool_environment_variables_additional_variables`.
+languagetool_ngrams_langs_enabled: ['fr', 'en']
+```
+
+Check the `languagetool_ngrams_langs` variable on [`default/main.yml`](https://github.com/mother-of-all-self-hosting/ansible-role-languagetool/blob/main/defaults/main.yml) for a list of languages for which the Ansible role supports downloading n-gram data.
+
+Additional languages which are not defined on the role may be available. You can redefine `languagetool_ngrams_langs` to have the role download URL for those languages.
 
 ## Installing
 
@@ -82,11 +90,11 @@ If you use the MASH playbook, the shortcut commands with the [`just` program](ht
 
 ## Usage
 
-After running the command for installation, LanguageTool becomes available at the specified hostname like `https://example.com`.
+After running the command for installation, the LanguageTool instance becomes available at the URL specified with `languagetool_hostname` and `languagetool_path_prefix`. With the configuration above, the service is hosted at `https://example.com`.
 
-[Libredirect](https://libredirect.github.io/), an extension for Firefox and Chromium-based desktop browsers, has support for redirections to LanguageTool. See [this section](https://github.com/httpjamesm/LanguageTool/blob/main/README.md#how-to-make-stack-overflow-links-take-you-to-languagetool-automatically) on the official documentation for more information.
+You can test the instance by making a request to [LanguageTool's HTTP API](https://dev.languagetool.org/public-http-api) by running a *curl* command as follows: `curl --data "language=en-US&text=a simple test" https://example.com/languagetool/v2/check`
 
-If you would like to make your instance public so that it can be used by anyone including Libredirect, please consider to send a PR to the [upstream project](https://github.com/httpjamesm/LanguageTool) to add yours to [`instances.json`](https://github.com/httpjamesm/LanguageTool/blob/main/instances.json), which Libredirect automatically fetches using a script (see [this FAQ entry](https://libredirect.github.io/faq.html#where_the_hell_are_those_instances_coming_from)).
+There are [software that support LanguageTool as an add-on](https://dev.languagetool.org/software-that-supports-languagetool-as-a-plug-in-or-add-on). To use them with your instance, set `https://example.com/languagetool/v2` to the URL (assuming you've installed at the `/languagetool` path prefix).
 
 ## Troubleshooting
 
