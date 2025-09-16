@@ -82,7 +82,7 @@ languagetool_container_labels_traefik_additional_response_headers_auto: |
     | combine ({'X-XSS-Protection': languagetool_http_header_xss_protection} if languagetool_http_header_xss_protection else {})
     | combine ({'X-Content-Type-Options': languagetool_http_header_content_type_options} if languagetool_http_header_content_type_options else {})
     | combine ({'Content-Security-Policy': languagetool_http_header_content_security_policy} if languagetool_http_header_content_security_policy else {})
-    | combine ({'Permission-Policy': languagetool_http_header_content_permission_policy} if languagetool_http_header_content_permission_policy else {})
+    | combine ({'Permissions-Policy': languagetool_http_header_permissions_policy} if languagetool_http_header_permissions_policy else {})
     | combine ({'Strict-Transport-Security': languagetool_http_header_strict_transport_security} if languagetool_http_header_strict_transport_security and languagetool_container_labels_traefik_tls else {})
   }}
 languagetool_container_labels_traefik_additional_response_headers_custom: {}
@@ -126,9 +126,9 @@ languagetool_http_header_content_type_options: nosniff
 # See: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy
 languagetool_http_header_content_security_policy: frame-ancestors 'self'
 
-# Specifies the value of the `Permission-Policy` header.
-# See: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Permission-Policy
-languagetool_http_header_content_permission_policy: "{{ 'interest-cohort=()' if languagetool_floc_optout_enabled else '' }}"
+# Specifies the value of the `Permissions-Policy` header.
+# See: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Permissions-Policy
+languagetool_http_header_permissions_policy: "{{ 'interest-cohort=()' if languagetool_floc_optout_enabled else '' }}"
 
 # Specifies the value of the `Strict-Transport-Security` header.
 # See: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Strict-Transport-Security
@@ -142,7 +142,7 @@ languagetool_http_header_strict_transport_security: "max-age=31536000; includeSu
 # - https://amifloced.org/
 #
 # Of course, a better solution is to just stop using browsers (like Chrome), which participate in such tracking practices.
-# See: `languagetool_content_permission_policy`
+# See: `languagetool_http_header_permissions_policy`
 languagetool_floc_optout_enabled: true
 
 # Controls if HSTS preloading is enabled
