@@ -97,7 +97,9 @@ languagetool_container_labels_traefik_additional_response_headers_custom: {}
 languagetool_container_labels_additional_labels: ''
 
 # A list of extra arguments to pass to the container
-languagetool_container_extra_arguments: []
+languagetool_container_extra_arguments: "{{ languagetool_container_extra_arguments_auto + languagetool_container_extra_arguments_custom }}"
+languagetool_container_extra_arguments_auto: []
+languagetool_container_extra_arguments_custom: []
 
 # Specifies how often the container health-check will run.
 #
