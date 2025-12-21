@@ -99,7 +99,7 @@ languagetool_container_labels_additional_labels: "{{ languagetool_container_labe
 languagetool_container_labels_additional_labels_auto: {}
 languagetool_container_labels_additional_labels_custom: {}
 
-# A list of extra arguments to pass to the container
+# A list of extra arguments to pass to the container (`docker create` command)
 languagetool_container_extra_arguments: "{{ languagetool_container_extra_arguments_auto + languagetool_container_extra_arguments_custom }}"
 languagetool_container_extra_arguments_auto: []
 languagetool_container_extra_arguments_custom: []
