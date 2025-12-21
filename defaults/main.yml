@@ -24,7 +24,7 @@ languagetool_gid: ""
 # The hostname at which LanguageTool is served.
 languagetool_hostname: ""
 
-# The path at which LanguageTool is exposed.
+# The path at which LanguageTool is served.
 # This value must either be `/` or not end with a slash (e.g. `/languagetool`).
 languagetool_path_prefix: /
 
