@@ -93,11 +93,11 @@ languagetool_container_labels_traefik_additional_response_headers_custom: {}
 #
 # Example:
 # languagetool_container_labels_additional_labels_custom: |
-#   my.label=1
-#   another.label="here"
-languagetool_container_labels_additional_labels: "{{ languagetool_container_labels_additional_labels_auto | combine(languagetool_container_labels_additional_labels_custom) }}"
-languagetool_container_labels_additional_labels_auto: {}
-languagetool_container_labels_additional_labels_custom: {}
+#   - my.label=1
+#   - another.label="here"
+languagetool_container_labels_additional_labels: "{{ languagetool_container_labels_additional_labels_auto + languagetool_container_labels_additional_labels_custom }}"
+languagetool_container_labels_additional_labels_auto: []
+languagetool_container_labels_additional_labels_custom: []
 
 # A list of extra arguments to pass to the container (`docker create` command)
 languagetool_container_extra_arguments: "{{ languagetool_container_extra_arguments_auto + languagetool_container_extra_arguments_custom }}"
