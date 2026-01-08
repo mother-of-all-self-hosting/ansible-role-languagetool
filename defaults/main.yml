@@ -92,7 +92,7 @@ languagetool_container_labels_traefik_additional_response_headers_custom: {}
 # To add your own custom labels, use `languagetool_container_labels_additional_labels_custom`
 #
 # Example:
-# languagetool_container_labels_additional_labels_custom: |
+# languagetool_container_labels_additional_labels_custom:
 #   - my.label=1
 #   - another.label="here"
 languagetool_container_labels_additional_labels: "{{ languagetool_container_labels_additional_labels_auto + languagetool_container_labels_additional_labels_custom }}"
