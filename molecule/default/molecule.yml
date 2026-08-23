@@ -31,13 +31,26 @@ provisioner:
         # Helper variables
         languagetool_debug_service_enabled: false
 
+        # The port on the host that LanguageTool is published on, and which
+        # `verify.yml` sends its API requests to.
+        languagetool_molecule_http_bind_port: 8010
+
+        # Deliberately not the role's own defaults (256m/512m), because those
+        # happen to be exactly what the container image falls back to when it
+        # is given no heap settings at all - see `Java_Xms=$${Java_Xms:-256m}`
+        # in the image's `start.sh`. Asserting on the defaults would therefore
+        # pass even if the role's env file never reached the container, so the
+        # scenario picks values that only the role can be the source of.
+        languagetool_java_heap_min: 300m
+        languagetool_java_heap_max: 700m
+
         # Variables for LanguageTool
         languagetool_uid: 1000
         languagetool_gid: 1000
         languagetool_scheme: http
         languagetool_hostname: localhost
         languagetool_container_labels_traefik_enabled: false
-        languagetool_container_http_host_bind_port: 8010
+        languagetool_container_http_host_bind_port: "{{ languagetool_molecule_http_bind_port }}"
   env:
     # Workaround for https://github.com/ansible/molecule/issues/4391
     ANSIBLE_ROLES_PATH: ${MOLECULE_PROJECT_DIRECTORY}/..:/.ansible/roles:/usr/share/ansible/roles:/etc/ansible/roles:~/.ansible/roles

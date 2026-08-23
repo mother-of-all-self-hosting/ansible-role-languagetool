@@ -47,7 +47,13 @@ Currently there is one testing scenario available.
 
 ### `default`
 
-Tests a standard LanguageTool installation.
+Tests a standard LanguageTool installation, and then verifies that the installed server actually works:
+
+- the `languagetool.service` systemd unit becomes active
+- `/v2/languages` lists the languages LanguageTool managed to initialize
+- checking `This are a test.` through `/v2/check` reports the expected `THIS_NNS` grammar match and suggests `These`, while checking a correct sentence reports no matches at all
+- the version the running server reports matches the one pinned in `defaults/main.yml`
+- the Java heap settings the role is given reach both the container's environment and the command line of the JVM that serves those requests
 
 ## Running
 
