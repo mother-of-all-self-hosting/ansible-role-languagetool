@@ -181,7 +181,7 @@
     # file is being produced and passed, rather than silently ignored.
     - name: Retrieve the LanguageTool container definition
       ansible.builtin.command:
-        cmd: "docker inspect {{ languagetool_defaults.languagetool_identifier }}"
+        cmd: "docker container inspect {{ languagetool_defaults.languagetool_identifier }}"
       register: languagetool_container_inspect
       changed_when: false
 
