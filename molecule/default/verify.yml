@@ -225,19 +225,16 @@
           The LanguageTool JVM runs with -Xms{{ languagetool_java_heap_min }} and
           -Xmx{{ languagetool_java_heap_max }}, as configured by the role
 
-    - name: Show LanguageTool verification summary
+    - name: Show the LanguageTool verification summary
       ansible.builtin.debug:
         msg:
-          - "systemd: {{ languagetool_service.status.ActiveState }}"
+          - "LanguageTool systemd: {{ languagetool_service.status.ActiveState }}"
+          - "LanguageTool version: {{ languagetool_check_with_error.json.software.version }}"
+          - "LanguageTool languages: {{ languagetool_languages.json | length }} listed"
           - >-
-            version: {{ languagetool_check_with_error.json.software.name }}
-            {{ languagetool_check_with_error.json.software.version }}
-            (role pins {{ languagetool_defaults.languagetool_version }})
-          - "languages: {{ languagetool_languages.json | length }} listed"
-          - >-
-            grammar: "{{ languagetool_molecule_text_with_error }}" reports
+            LanguageTool grammar: "{{ languagetool_molecule_text_with_error }}" reports
             {{ languagetool_check_with_error.json.matches | map(attribute='rule.id') | list | join(', ') }};
             "{{ languagetool_molecule_text_without_error }}" reports nothing
           - >-
-            heap: the JVM runs with -Xms{{ languagetool_java_heap_min }}
+            LanguageTool heap: the JVM runs with -Xms{{ languagetool_java_heap_min }}
             -Xmx{{ languagetool_java_heap_max }} from the role's env file
