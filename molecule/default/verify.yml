@@ -167,13 +167,8 @@
         that:
           - languagetool_check_with_error.json.software.name == 'LanguageTool'
           - languagetool_check_with_error.json.software.version == (languagetool_defaults.languagetool_version | string | split('-') | first)
-        fail_msg: >-
-          LanguageTool reports {{ languagetool_check_with_error.json.software.version | default('no version') }},
-          which is not the version of the pinned {{ languagetool_defaults.languagetool_version }}
-        success_msg: >-
-          {{ languagetool_check_with_error.json.software.name }} reports
-          {{ languagetool_check_with_error.json.software.version }}, matching the pinned
-          {{ languagetool_defaults.languagetool_version }}
+        fail_msg: "LanguageTool reports {{ languagetool_check_with_error.json.software.version | default('none') }}, expected {{ languagetool_defaults.languagetool_version }}"
+        success_msg: "LanguageTool reports {{ languagetool_check_with_error.json.software.version }}"
 
     # `languagetool_java_heap_min` and `languagetool_java_heap_max` are written
     # into the env file by `templates/env.j2` and referenced from the systemd
