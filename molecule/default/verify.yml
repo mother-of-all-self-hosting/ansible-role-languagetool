@@ -21,11 +21,10 @@
     languagetool_molecule_text_without_error: The quick brown fox jumps over the lazy dog.
 
   tasks:
-    # Role defaults are not in scope here, but the version that Renovate bumps
-    # lives in them and is what the running server is checked against below.
-    # Only literal leaf values are read out of this - anything derived would be
-    # unresolvable outside a play that has the role's variables.
-    - name: Load the LanguageTool role defaults
+    # The role is not included in this playbook, so its defaults are not in
+    # scope. Reading defaults/main.yml directly ties the version assertion
+    # below.
+    - name: Load the role defaults
       ansible.builtin.include_vars:
         file: "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}/defaults/main.yml"
         name: languagetool_defaults
