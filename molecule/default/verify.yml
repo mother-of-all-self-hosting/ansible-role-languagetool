@@ -176,17 +176,17 @@
     - name: Retrieve the LanguageTool container definition
       ansible.builtin.command:
         cmd: "docker container inspect {{ languagetool_defaults.languagetool_identifier }}"
-      register: languagetool_container_inspect
+      register: languagetool_container_raw
       changed_when: false
 
     - name: Assert the role's heap settings reached the container environment
       ansible.builtin.assert:
         that:
-          - "'Java_Xms=' ~ languagetool_java_heap_min in (languagetool_container_inspect.stdout | from_json | first).Config.Env"
-          - "'Java_Xmx=' ~ languagetool_java_heap_max in (languagetool_container_inspect.stdout | from_json | first).Config.Env"
+          - "'Java_Xms=' ~ languagetool_java_heap_min in (languagetool_container_raw.stdout | from_json | first).Config.Env"
+          - "'Java_Xmx=' ~ languagetool_java_heap_max in (languagetool_container_raw.stdout | from_json | first).Config.Env"
         fail_msg: >-
           The container environment is
-          {{ (languagetool_container_inspect.stdout | from_json | first).Config.Env }},
+          {{ (languagetool_container_raw.stdout | from_json | first).Config.Env }},
           which does not carry Java_Xms={{ languagetool_java_heap_min }} and
           Java_Xmx={{ languagetool_java_heap_max }}
         success_msg: >-
