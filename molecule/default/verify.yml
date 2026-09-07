@@ -173,7 +173,7 @@
     # into the env file by `templates/env.j2` and referenced from the systemd
     # unit as `--env-file`. Reading them back off the container proves that
     # file is being produced and passed, rather than silently ignored.
-    - name: Retrieve the LanguageTool container definition
+    - name: Inspect the LanguageTool container
       ansible.builtin.command:
         cmd: "docker container inspect {{ languagetool_defaults.languagetool_identifier }}"
       register: languagetool_container_raw
