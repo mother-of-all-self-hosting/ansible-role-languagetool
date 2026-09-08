@@ -52,7 +52,7 @@
     - name: Retrieve the LanguageTool systemd service log for debugging
       when: languagetool_debug_service_enabled | bool
       ansible.builtin.command:
-        cmd: journalctl -xeu languagetool.service
+        cmd: journalctl --no-pager --output=cat --unit=languagetool.service
       changed_when: false
 
     # The readiness gate for everything below. A JVM that has to load rules and
