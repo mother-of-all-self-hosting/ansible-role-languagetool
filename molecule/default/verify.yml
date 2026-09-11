@@ -20,6 +20,9 @@
     languagetool_molecule_text_with_error: This are a test.
     languagetool_molecule_text_without_error: The quick brown fox jumps over the lazy dog.
 
+    languagetool_verify_units:
+      - languagetool.service
+
   tasks:
     - name: Verify that LanguageTool works
       block:
@@ -31,13 +34,14 @@
             file: "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}/defaults/main.yml"
             name: languagetool_defaults
 
-        - name: Wait for the LanguageTool systemd service to become active (up to 180s)
+        - name: Wait for the LanguageTool systemd services to become active (up to 180s each)
           ansible.builtin.systemd_service:
-            name: languagetool.service
-          register: languagetool_service
-          until: languagetool_service.status.ActiveState == 'active'
+            name: "{{ item }}"
+          register: languagetool_services
+          until: languagetool_services.status.ActiveState == 'active'
           retries: 36
           delay: 5
+          loop: "{{ languagetool_verify_units }}"
           # So that giving up is reported by the assertion below rather than as a
           # wall of systemd unit properties.
           failed_when: false
@@ -45,17 +49,20 @@
         # `Restart=always` in the systemd unit means that even a container which crashes
         # and gets restarted reads as active here, so this is a precondition rather than
         # a result.
-        - name: Assert the LanguageTool systemd service is active
+        - name: Assert the LanguageTool systemd services are active
           ansible.builtin.assert:
-            that: languagetool_service.status.ActiveState == 'active'
-            fail_msg: "languagetool.service is not active ({{ languagetool_service.status.ActiveState }})"
-            success_msg: "languagetool.service is active"
+            that: languagetool_services.results | map(attribute='status.ActiveState') | unique | list == ['active']
+            fail_msg: >-
+              Not every service is active:
+              {{ dict(languagetool_verify_units | zip(languagetool_services.results | map(attribute='status.ActiveState'))) }}
+            success_msg: "Every systemd service is active"
 
-        - name: Retrieve the LanguageTool systemd service log for debugging
+        - name: Retrieve the LanguageTool systemd services log for debugging
           when: languagetool_debug_service_enabled | bool
           ansible.builtin.command:
-            cmd: journalctl --no-pager --output=cat --unit=languagetool.service
+            cmd: "journalctl --no-pager --output=cat --unit={{ item }}"
           changed_when: false
+          loop: "{{ languagetool_verify_units }}"
 
         # The readiness gate for everything below. A JVM that has to load rules and
         # dictionaries for every language it supports takes a while to answer, so
@@ -235,7 +242,7 @@
         - name: Show the LanguageTool verification summary
           ansible.builtin.debug:
             msg:
-              - "LanguageTool systemd: {{ languagetool_service.status.ActiveState }}"
+              - "LanguageTool systemd: {% for unit, state in languagetool_verify_units | zip(languagetool_services.results | map(attribute='status.ActiveState')) %}{{ unit }} ({{ state }}){% if not loop.last %}, {% endif %}{% endfor %}"
               - "LanguageTool version: {{ languagetool_check_with_error.json.software.version }}"
               - "LanguageTool languages: {{ languagetool_languages.json | length }} listed"
               - >-
